@@ -5,8 +5,17 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeActor, setActiveActor] = useState(0);
   const [arcoUnlocked, setArcoUnlocked] = useState({ A: false, R: false, C: false, O: false });
+  const [sysTime, setSysTime] = useState(new Date());
 
-  const totalSlides = 8; // Aumentado a 8 diapositivas
+  const totalSlides = 8; 
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSysTime(new Date()); 
+    }, 50);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -83,7 +92,23 @@ export default function App() {
                 <div className={`border-t-2 border-dashed ${isDark ? 'border-red-900' : 'border-slate-300'} pt-8 grid grid-cols-3 gap-4 font-mono text-sm`}>
                   <div><span className="opacity-50 block mb-1">USER_ID:</span> <strong className={theme.textBase}>Michele Andrea Barriga Carrasco</strong></div>
                   <div><span className="opacity-50 block mb-1">ROLE:</span> <strong className={theme.textBase}>Analista Programador</strong></div>
-                  <div><span className="opacity-50 block mb-1">TIMESTAMP:</span> <strong className={theme.textBase}>2026-05-28</strong></div>
+                  <div>
+  <span className="opacity-50 block mb-1">SYS.TIMESTAMP:</span> 
+  <strong className={`flex items-center gap-2 ${theme.textBase}`}>
+    
+    {/* A. Muestra la fecha (Año-Mes-Día) extrayéndola de sysTime */}
+    <span>{sysTime.toISOString().split('T')[0]}</span>
+    
+    {/* B. Muestra la hora corriendo en rojo (Horas:Minutos:Segundos:Milisegundos) */}
+    <span className="text-red-500 bg-red-950/30 px-2 py-0.5 border border-red-900">
+      {String(sysTime.getHours()).padStart(2, '0')}:
+      {String(sysTime.getMinutes()).padStart(2, '0')}:
+      {String(sysTime.getSeconds()).padStart(2, '0')}:
+      <span className="text-xs opacity-70">{String(sysTime.getMilliseconds()).padStart(3, '0')}</span>
+    </span>
+    
+  </strong>
+</div>
                 </div>
               </div>
             </div>
